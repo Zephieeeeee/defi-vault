@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-slate-100 antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 211, 238, 0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* --- Panels --- */
+  .glass-panel {
+    @apply relative bg-[#0c1223]/80 border border-slate-800/60 rounded-2xl shadow-2xl backdrop-blur-xl;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0) 60%);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .glass-panel:hover {
+    @apply border-slate-700/80;
+  }
+
+  .card-glow-cyan {
+    box-shadow: 0 0 40px -10px rgba(34, 211, 238, 0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .card-glow-indigo {
+    box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .card-glow-emerald {
+    box-shadow: 0 0 40px -10px rgba(52, 211, 153, 0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* --- Buttons --- */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white;
+    background: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.45), 0 4px 20px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed saturate-50;
+  }
+
+  .btn-secondary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl bg-slate-800/70 px-5 py-2.5 text-sm font-semibold text-slate-100 border border-slate-700/60;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    @apply bg-slate-700/70 border-slate-600/60;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-secondary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* --- Inputs --- */
+  .input {
+    @apply w-full rounded-xl border border-slate-800/80 bg-slate-950/50 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-600;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .input:focus {
+    @apply border-cyan-500/60;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1), 0 0 20px rgba(34, 211, 238, 0.05);
+  }
+
+  /* --- Badges --- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-700/50 bg-slate-900/60 px-3 py-1 text-xs font-semibold text-slate-300 backdrop-blur-md;
+  }
+
+  /* --- Stat Number --- */
+  .stat-number {
+    @apply text-2xl font-bold tracking-tight text-slate-50;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Gradient Text --- */
+  .gradient-text-cyan {
+    background: linear-gradient(135deg, #22d3ee, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-emerald {
+    background: linear-gradient(135deg, #34d399, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* --- Animated dot --- */
+  .pulse-dot {
+    @apply h-2 w-2 rounded-full;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* --- Table --- */
+  .data-table th {
+    @apply px-6 py-4 text-left text-[11px] font-bold uppercase tracking-widest text-slate-500;
+    background: rgba(255,255,255,0.015);
+  }
+
+  .data-table td {
+    @apply px-6 py-5 text-sm;
+  }
+
+  .data-table tr {
+    @apply border-b border-slate-800/50 transition-colors;
+  }
+
+  .data-table tbody tr:hover {
+    @apply bg-slate-800/20;
+  }
+
+  .data-table tbody tr:last-child {
+    @apply border-none;
+  }
+
+  /* --- Nav link --- */
+  .nav-link {
+    @apply text-sm font-medium text-slate-400 transition-colors hover:text-slate-100;
+  }
+
+  .nav-link.active {
+    @apply text-cyan-300;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px currentColor; }
+  50% { opacity: 0.6; box-shadow: 0 0 2px currentColor; }
+}
