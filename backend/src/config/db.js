@@ -1,18 +1,23 @@
 const mongoose = require("mongoose");
 
 async function connectDb(mongoUri) {
-  if (!mongoUri) {
-    throw new Error("MONGO_URI not set");
+  try {
+    if (!mongoUri) {
+      console.warn("⚠ MongoDB disabled: MONGO_URI not set");
+      return;
+    }
+
+    mongoose.set("strictQuery", true);
+
+    await mongoose.connect(mongoUri, {
+      autoIndex: true
+    });
+
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+    console.warn("⚠ Backend will continue running without database");
   }
-
-  mongoose.set("strictQuery", true);
-
-  await mongoose.connect(mongoUri, {
-    autoIndex: true
-  });
-
-  console.log("MongoDB connected");
 }
 
 module.exports = { connectDb };
-
