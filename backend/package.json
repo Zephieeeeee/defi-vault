@@ -4,8 +4,8 @@
   "private": true,
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -16,8 +16,6 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "hardhat": "^2.22.0",
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0"
+    "nodemon": "^3.1.0"
   }
 }
