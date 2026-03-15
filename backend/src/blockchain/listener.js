@@ -1,6 +1,5 @@
 const { ethers } = require("ethers");
-const path = require("path");
-const fs = require("fs");
+
 const {
   Deposit,
   Borrow,
@@ -10,25 +9,14 @@ const {
   Unstake,
   Reward
 } = require("../models/EventModels");
+
 const { UserPosition } = require("../models/UserPosition");
 
-function loadArtifact(contractPath, contractName) {
-  const artifactPath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "..",
-    "artifacts",
-    "contracts",
-    contractPath,
-    `${contractName}.json`
-  );
-  const json = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
-  return json.abi;
-}
+const lendingArtifact = require("../abi/LendingPool.json");
+const stakingArtifact = require("../abi/Staking.json");
 
-const lendingAbi = loadArtifact("LendingPool.sol", "LendingPool");
-const stakingAbi = loadArtifact("Staking.sol", "Staking");
+const lendingAbi = lendingArtifact.abi;
+const stakingAbi = stakingArtifact.abi;
 
 function toHexAddress(addr) {
   return ethers.getAddress(addr);
@@ -44,6 +32,7 @@ async function updateUserPositionFromChain(userAddress, lendingContract, staking
   ]);
 
   const address = toHexAddress(userAddress);
+
   const data = {
     address,
     totalCollateralWei: collateral.toString(),
@@ -70,6 +59,7 @@ async function startBlockchainListener() {
   if (!RPC_URL) {
     throw new Error("RPC_URL not set");
   }
+
   if (!LENDING_POOL_ADDRESS || !STAKING_ADDRESS) {
     throw new Error("Contract addresses not set");
   }
@@ -81,7 +71,12 @@ async function startBlockchainListener() {
     lendingAbi,
     provider
   );
-  const staking = new ethers.Contract(STAKING_ADDRESS, stakingAbi, provider);
+
+  const staking = new ethers.Contract(
+    STAKING_ADDRESS,
+    stakingAbi,
+    provider
+  );
 
   console.log(`Blockchain listener connected to ${RPC_URL}`);
 
@@ -94,6 +89,7 @@ async function startBlockchainListener() {
       amount: amount.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
@@ -107,6 +103,7 @@ async function startBlockchainListener() {
       amount: "-" + amount.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
@@ -120,6 +117,7 @@ async function startBlockchainListener() {
       amount: amount.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
@@ -133,6 +131,7 @@ async function startBlockchainListener() {
       amount: amount.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
@@ -148,7 +147,9 @@ async function startBlockchainListener() {
       seizedCollateral: seizedCollateral.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
+
     await updateUserPositionFromChain(user, lending, staking);
     await updateUserPositionFromChain(liquidator, lending, staking);
   });
@@ -162,6 +163,7 @@ async function startBlockchainListener() {
       amount: amount.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
@@ -175,6 +177,7 @@ async function startBlockchainListener() {
       amount: amount.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
@@ -188,10 +191,10 @@ async function startBlockchainListener() {
       reward: reward.toString(),
       timestamp: new Date()
     });
+
     await doc.save();
     await updateUserPositionFromChain(user, lending, staking);
   });
 }
 
 module.exports = { startBlockchainListener };
-
