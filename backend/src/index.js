@@ -17,6 +17,20 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+// Ensure DB connection for serverless
+app.use(async (req, res, next) => {
+  if (process.env.VERCEL) {
+    try {
+      await connectDb(process.env.MONGO_URI);
+      next();
+    } catch (err) {
+      res.status(500).json({ error: "Failed to connect to database" });
+    }
+  } else {
+    next();
+  }
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
@@ -35,15 +49,26 @@ async function bootstrap() {
       console.warn("⚠ MongoDB disabled");
     }
 
-    console.log("⚠ Blockchain listener disabled for demo");
+    const artifactsPath = path.join(__dirname, "..", "..", "artifacts");
+    console.log("Expecting Hardhat artifacts at:", artifactsPath);
 
-    app.listen(PORT, () => {
-      console.log(`DeFiVault backend listening on port ${PORT}`);
-    });
+    // In serverless environments, we might not want to start the listener 
+    // or we might want to handle it differently.
+    if (!process.env.VERCEL) {
+      await startBlockchainListener();
+      app.listen(PORT, () => {
+        console.log(`DeFiVault backend listening on port ${PORT}`);
+      });
+    }
 
   } catch (err) {
     console.error("Failed to start backend:", err);
+    if (!process.env.VERCEL) process.exit(1);
   }
 }
 
-bootstrap();
+if (!process.env.VERCEL) {
+  bootstrap();
+}
+
+module.exports = app;

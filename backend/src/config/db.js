@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
+let isConnected = false;
+
 async function connectDb(mongoUri) {
+  if (isConnected) return;
   try {
     if (!mongoUri) {
       console.warn("⚠ MongoDB disabled: MONGO_URI not set");
@@ -13,6 +16,7 @@ async function connectDb(mongoUri) {
       autoIndex: true
     });
 
+    isConnected = true;
     console.log("MongoDB connected");
   } catch (err) {
     console.error("MongoDB connection failed:", err.message);
